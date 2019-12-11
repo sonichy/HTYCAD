@@ -179,6 +179,7 @@ void MainWindow::on_actionRotateLeft_triggered()
     vector3D.setX(x);
     vector3D.setZ(z);
     camera->setPosition(vector3D);
+    camera->setUpVector(QVector3D(0, 1, 0));
     ui->statusBar->showMessage("a = " + QString::number(a) + ", Camera.Position (" + QString::number(camera->position().x()) + ", " + QString::number(camera->position().y()) + ", " + QString::number(camera->position().z()) + ")");
 }
 
@@ -193,6 +194,7 @@ void MainWindow::on_actionRotateRight_triggered()
     vector3D.setX(x);
     vector3D.setZ(z);
     camera->setPosition(vector3D);
+    camera->setUpVector(QVector3D(0, 1, 0));
     ui->statusBar->showMessage("a = " + QString::number(a) + ", Camera.Position (" + QString::number(camera->position().x()) + ", " + QString::number(camera->position().y()) + ", " + QString::number(camera->position().z()) + ")");
 }
 
