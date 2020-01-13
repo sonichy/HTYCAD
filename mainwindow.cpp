@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include <Qt3DExtras/QCuboidMesh>
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DExtras/QConeMesh>
@@ -13,15 +12,21 @@
 #include <QFileDialog>
 #include <QtMath>
 #include <QTimer>
+#include <QColorDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    settings(QCoreApplication::organizationName(), QCoreApplication::applicationName())
 {
     ui->setupUi(this);
     isStop = true;
-    Qt3DExtras::Qt3DWindow *window = new Qt3DExtras::Qt3DWindow();
-    window->defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d9f)));
+    window = new Qt3DExtras::Qt3DWindow();
+    QString srgb = settings.value("color_background", "0xffffff").toString();
+    //window->defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d9f)));
+    bool ok;
+    window->defaultFrameGraph()->setClearColor(QColor(QRgb(srgb.toInt(&ok, 16))));
     QWidget *widget3d = QWidget::createWindowContainer(window);
     ui->splitter->addWidget(widget3d);
     //ui->widget = window;
@@ -228,6 +233,28 @@ void MainWindow::on_action_export_triggered()
         //widget3d->render(&pixmap);
         //pixmap.save(filename);
     }
+}
+
+void MainWindow::on_action_background_triggered()
+{
+    QString srgb = settings.value("color_background", "0xffffff").toString();
+    bool ok;
+    QColor color(QRgb(srgb.toInt(&ok, 16)));
+    color = QColorDialog::getColor(color, this);
+    if(color.isValid()){
+        window->defaultFrameGraph()->setClearColor(color);
+        QString srgb = "0x" + QString::number(color.red(),16) + QString::number(color.green(),16) + QString::number(color.blue(),16);
+        //QString srgb = QString::number(color.rgb(),16);
+        qDebug() << srgb;
+        settings.setValue("color_background", srgb);
+    }
+}
+
+void MainWindow::on_action_about_triggered()
+{
+    QMessageBox MB(QMessageBox::NoIcon, "关于", "海天鹰CAD 0.1\n一款基于 Qt3D 的3D程序。\n作者：海天鹰\nE-mail: sonichy@163.com\n主页：https://github.com/sonichy");
+    MB.setIconPixmap(QPixmap(":/HTYCAD.png"));
+    MB.exec();
 }
 
 void MainWindow::drawLine(const QVector3D &start, const QVector3D &end, const QColor &color, Qt3DCore::QEntity *_rootEntity)

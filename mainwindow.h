@@ -6,6 +6,7 @@
 #include <Qt3DCore/QEntity>
 #include <Qt3DExtras/QPhongMaterial>
 #include <Qt3DRender/QCamera>
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -30,6 +31,7 @@ private:
     QVector3D vector3D_camera;
     bool isStop;
     void drawLine(const QVector3D &start, const QVector3D &end, const QColor &color, Qt3DCore::QEntity *_rootEntity);
+    QSettings settings;
 
 private slots:
     void on_actionRender_triggered();
@@ -40,6 +42,8 @@ private slots:
     void on_actionAutoRotateLeft_triggered();
     void on_actionRotateRight_triggered();
     void on_action_export_triggered();
+    void on_action_background_triggered();
+    void on_action_about_triggered();
 
 };
 
